@@ -40,6 +40,9 @@ public class Marks {
                     case "total":
                         handleTotal(parts, marks, hasMarks, n);
                         break;
+                    case "grades":
+                        handleGrades(marks, hasMarks, n);
+                        break;
                     case "menu":
                         printMenu();
                         break;
@@ -65,6 +68,7 @@ public class Marks {
         System.out.println(" average_s [subjectID] - average mark for a subject");
         System.out.println(" average [studentID] - average mark for a student");
         System.out.println(" total [studentID] - total mark for a student");
+        System.out.println(" grades - show grade table for all students");
         System.out.println(" menu - show this menu again");
         System.out.println(" exit - quit the program");
       
@@ -166,5 +170,45 @@ public class Marks {
         }
         int total = marks[studentID - 1][0] + marks[studentID - 1][1] + marks[studentID - 1][2];
         System.out.println("Total mark for student " + studentID + ": " + total);
+    }
+
+    // ---------- Question 3: grading ----------
+
+    /**
+     * Grade criteria:
+     * 90+     -> A
+     * 80-89   -> B
+     * 70-79   -> C
+     * 60-69   -> D
+     * below60 -> Fail
+     */
+    static String getGrade(int score) {
+        if (score >= 90) return "A";
+        if (score >= 80) return "B";
+        if (score >= 70) return "C";
+        if (score >= 60) return "D";
+        return "Fail";
+    }
+
+    static void handleGrades(int[][] marks, boolean[] hasMarks, int n) {
+        boolean any = false;
+        for (boolean b : hasMarks) {
+            if (b) { any = true; break; }
+        }
+        if (!any) {
+            System.out.println("No marks recorded yet.");
+            return;
+        }
+
+        System.out.printf("%-10s %-14s %-14s %-14s%n", "Student", "Mathematics", "Chemistry", "Physics");
+        System.out.println("--------------------------------------------------------------");
+        for (int i = 0; i < n; i++) {
+            if (!hasMarks[i]) continue;
+            int studentID = i + 1;
+            String mathCell = marks[i][0] + "(" + getGrade(marks[i][0]) + ")";
+            String chemCell = marks[i][1] + "(" + getGrade(marks[i][1]) + ")";
+            String physCell = marks[i][2] + "(" + getGrade(marks[i][2]) + ")";
+            System.out.printf("%-10d %-14s %-14s %-14s%n", studentID, mathCell, chemCell, physCell);
+        }
     }
 }
